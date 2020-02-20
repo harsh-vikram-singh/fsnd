@@ -466,14 +466,16 @@ def create_artist_submission():
     print('Houston, we are receiving the message!!')
     form = ArtistForm()
     artist = {}
+    # ipdb.set_trace()
+    if form.validate_on_submit():
+        artist['name'] = form.name.data
+        artist['city'] = form.city.data
+        artist['state'] = form.state.data
+        artist['phone'] = form.phone.data
+        artist['genres'] = form.genres.data
+        artist['fb_link'] = form.facebook_link.data
+    print(artist)
     ipdb.set_trace()
-    # artist['name'] = request.form['name']
-    # artist['city'] = request.form['city']
-    # artist['state'] = request.form['state']
-    # artist['phone'] = request.form['phone']
-    # artist['genres'] = request.form.getlist('genres')
-    # artist['fb_link'] = request.form['facebook_link']
-    # print(artist)
     # on successful db insert, flash success
     flash('Artist ' + request.form['name'] + ' was successfully listed!')
     # TODO: on unsuccessful db insert, flash an error instead.
