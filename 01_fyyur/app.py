@@ -72,7 +72,7 @@ class Artist(db.Model):
     address = db.Column(db.String(120))
     website_link = db.Column(db.String(500))
     seeking_venue = db.Column(db.Boolean, default=False)
-    seeking_description = db.Column(db.String(), nullable=True)
+    seeking_description = db.Column(db.String(1500), nullable=True)
     # check that past and upcoming shows can be extracted from shows table
     shows = db.relationship('Show', backref='artist', lazy=True)
 
@@ -469,23 +469,26 @@ def create_artist_submission():
     _artist = {}
     # ipdb.set_trace()
     if form.validate_on_submit():
-        _artist['name'] = form.name.data
-        _artist['city'] = form.city.data
-        _artist['state'] = form.state.data
-        _artist['phone'] = form.phone.data
-        _artist['genres'] = form.genres.data
-        _artist['fb_link'] = form.facebook_link.data
-    artist = Artist(name=_artist['name'],
-                    city=_artist['city'],
-                    state=_artist['state'],
-                    phone=_artist['phone'],
-                    # to store the list as a string separated by a comma
-                    genres=",".join(_artist['genres']),
-                    facebook_link=_artist['fb_link'])
-    db.session.add(artist)
-    db.session.commit()
+        if form.seeking_venue.data == 'Yes':
+            seeking_venue = True
+        else:
+            seeking_venue = False
+        artist = Artist(name=form.name.data,
+                        city=form.city.data,
+                        state=form.state.data,
+                        phone=form.phone.data,
+                        # to store the list as a string separated by a comma
+                        genres=",".join(form.genres.data),
+                        facebook_link=form.facebook_link.data,
+                        address=form.address.data,
+                        website_link=form.website_link.data,
+                        seeking_venue=seeking_venue,
+                        seeking_description=form.seeking_description.data,
+                        image_link=form.image_link.data)
+        db.session.add(artist)
+        db.session.commit()
     print("check if the data is inserted into the Artist table")
-    ipdb.set_trace()
+    # ipdb.set_trace()
     # on successful db insert, flash success
     flash('Artist ' + request.form['name'] + ' was successfully listed!')
     # TODO: on unsuccessful db insert, flash an error instead.
