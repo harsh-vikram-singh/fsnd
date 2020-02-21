@@ -64,7 +64,7 @@ class Artist(db.Model):
     city = db.Column(db.String(120))
     state = db.Column(db.String(120))
     phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
+    genres = db.Column(db.String(1000))
     image_link = db.Column(db.String(500))
     facebook_link = db.Column(db.String(120))
 
@@ -463,18 +463,28 @@ def create_artist_submission():
     # called upon submitting the new artist listing form
     # TODO: insert form data as a new Venue record in the db, instead
     # TODO: modify data to be the data object returned from db insertion
-    print('Houston, we are receiving the message!!')
+    # delete after the functionality is tested...
+    print('receiving the message!!')
     form = ArtistForm()
-    artist = {}
+    _artist = {}
     # ipdb.set_trace()
     if form.validate_on_submit():
-        artist['name'] = form.name.data
-        artist['city'] = form.city.data
-        artist['state'] = form.state.data
-        artist['phone'] = form.phone.data
-        artist['genres'] = form.genres.data
-        artist['fb_link'] = form.facebook_link.data
-    print(artist)
+        _artist['name'] = form.name.data
+        _artist['city'] = form.city.data
+        _artist['state'] = form.state.data
+        _artist['phone'] = form.phone.data
+        _artist['genres'] = form.genres.data
+        _artist['fb_link'] = form.facebook_link.data
+    artist = Artist(name=_artist['name'],
+                    city=_artist['city'],
+                    state=_artist['state'],
+                    phone=_artist['phone'],
+                    # to store the list as a string separated by a comma
+                    genres=",".join(_artist['genres']),
+                    facebook_link=_artist['fb_link'])
+    db.session.add(artist)
+    db.session.commit()
+    print("check if the data is inserted into the Artist table")
     ipdb.set_trace()
     # on successful db insert, flash success
     flash('Artist ' + request.form['name'] + ' was successfully listed!')

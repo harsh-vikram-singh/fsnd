@@ -32,11 +32,11 @@ class Genres(Enum):
 
     @classmethod
     def list_all(cls):
-        return [name for name, member in cls.__members__.items()]
+        return [member.value for name, member in cls.__members__.items()]
 
     @classmethod
     def generate_options(cls):
-        return [(name, name) for name, member in cls.__members__.items()]
+        return [(member.value, member.value) for name, member in cls.__members__.items()]
 
 #########################################################################
 # custom validators
