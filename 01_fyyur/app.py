@@ -260,9 +260,28 @@ def create_venue_form():
 def create_venue_submission():
     # TODO: insert form data as a new Venue record in the db, instead
     # TODO: modify data to be the data object returned from db insertion
-
-    # on successful db insert, flash success
-    flash('Venue ' + request.form['name'] + ' was successfully listed!')
+    form = VenueForm()
+    ipdb.set_trace()
+    seeking_talent = False
+    if form.seeking_talent.data == 'Yes':
+        seeking_talent = True
+    if form.validate_on_submit():
+        venue = Venue(name=form.name.data,
+                      city=form.city.data,
+                      state=form.state.data,
+                      address=form.address.data,
+                      phone=form.phone.data,
+                      image_link=form.image_link.data,
+                      facebook_link=form.facebook_link.data,
+                      genres=','.join(form.genres.data),
+                      website_link=form.website_link.data,
+                      seeking_talent=seeking_talent,
+                      seeking_description=form.seeking_description.data)
+        db.session.add(venue)
+        # ipdb.set_trace()
+        db.session.commit()
+        # on successful db insert, flash success
+        flash('Venue ' + request.form['name'] + ' was successfully listed!')
     # TODO: on unsuccessful db insert, flash an error instead.
     # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
     # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
@@ -392,7 +411,24 @@ def show_artist(artist_id):
                        artist_id, [data1, data2, data3]))[0]
 
     # extracting data for the artist from the database:
-    # TODO added by Harsh
+    artist = Artist.query.get(artist_id)
+    data = {
+        "id": artist.id,
+        "name": artist.name,
+        "genres": artist.genres.split(','),
+        "city": artist.city,
+        "state": artist.state,
+        "phone": artist.phone,
+        "website": artist.website_link,
+        "facebook_link": artist.facebook_link,
+        "seeking_venue": artist.seeking_venue,
+        "seeking_description": artist.seeking_description,
+        "image_link": artist.image_link,
+        "past_shows": [],
+        "upcoming_shows": [],
+        "past_shows_count": 1,
+        "upcoming_shows_count": 0,
+    }
     return render_template('pages/show_artist.html', artist=data)
 
 #  Update
@@ -468,10 +504,8 @@ def create_artist_submission():
     # TODO: insert form data as a new Venue record in the db, instead
     # TODO: modify data to be the data object returned from db insertion
     # delete after the functionality is tested...
-    print('receiving the message!!')
     form = ArtistForm()
-    _artist = {}
-    ipdb.set_trace()
+    # ipdb.set_trace()
     if form.validate_on_submit():
         if form.seeking_venue.data == 'Yes':
             seeking_venue = True
@@ -558,7 +592,17 @@ def create_shows():
 def create_show_submission():
     # called to create new shows in the db, upon submitting new show listing form
     # TODO: insert form data as a new Show record in the db, instead
-
+    form = ShowForm()
+    if form.validate_on_submit():
+        artist = Artist.query.get(form.artist_id.data)
+        venue = Venue.query.get(form.venue_id.data)
+        showtime = form.start_time.data
+        ipdb.set_trace()
+        show = Show(artist_id=int(artist.id),
+                    venue_id=int(venue.id),
+                    show_time=showtime)
+        db.session.add(show)
+        db.session.commit()
     # on successful db insert, flash success
     flash('Show was successfully listed!')
     # TODO: on unsuccessful db insert, flash an error instead.
