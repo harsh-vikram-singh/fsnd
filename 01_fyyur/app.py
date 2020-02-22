@@ -293,6 +293,7 @@ def artists():
         "id": 6,
         "name": "The Wild Sax Band",
     }]
+    data = Artist.query.all()
     return render_template('pages/artists.html', artists=data)
 
 
@@ -389,6 +390,9 @@ def show_artist(artist_id):
     }
     data = list(filter(lambda d: d['id'] ==
                        artist_id, [data1, data2, data3]))[0]
+
+    # extracting data for the artist from the database:
+    # TODO added by Harsh
     return render_template('pages/show_artist.html', artist=data)
 
 #  Update
@@ -467,7 +471,7 @@ def create_artist_submission():
     print('receiving the message!!')
     form = ArtistForm()
     _artist = {}
-    # ipdb.set_trace()
+    ipdb.set_trace()
     if form.validate_on_submit():
         if form.seeking_venue.data == 'Yes':
             seeking_venue = True
