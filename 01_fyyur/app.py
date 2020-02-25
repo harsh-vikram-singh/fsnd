@@ -16,6 +16,7 @@ from forms import *
 from config import SQLALCHEMY_DATABASE_URI
 from flask_migrate import Migrate  # added by Harsh to perform database migrations
 import ipdb
+import datetime
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -87,6 +88,56 @@ class Show(db.Model):
     artist_id = db.Column(db.Integer, db.ForeignKey(
         'Artist.id'), nullable=False)
     venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
+
+#----------------------------------------------------------------------------#
+# Helper functions
+#----------------------------------------------------------------------------#
+
+
+def artist_list_shows(artist_id):
+    """
+    returns a tuple that contains two lists, past_shows and upcoming_shows of the artist
+    """
+    upcoming_shows, past_shows = [], []
+    time_now = datetime.datetime.now()
+    artist_shows_all = db.session.query(Show).filter(
+        Show.artist_id == artist_id).all()
+    for show in artist_shows_all:
+        venue = db.session.query(Venue).get(show.venue_id)
+        info_dict = {
+            "venue_id": venue.id,
+            "venue_name": venue.name,
+            "venue_image_link": venue.image_link,
+            "start_time": show.show_time.strftime('%Y-%m-%dT%H:%M:%S.000Z')
+        }
+        if show.show_time < time_now:
+            past_shows.append(info_dict)
+        else:
+            upcoming_shows.append(info_dict)
+    return (past_shows, upcoming_shows)
+
+
+def venue_list_shows(venue_id):
+    """
+    returns a tuple that contains two lists, past_shows and upcoming_shows for the venue
+    """
+    upcoming_shows, past_shows = [], []
+    time_now = datetime.datetime.now()
+    venue_show_all = db.session.query(Show).filter(
+        Show.venue_id == venue_id).all()
+    for show in venue_show_all:
+        _data = {
+            'artist_id': show.artist_id,
+            'artist_name': show.artist.name,
+            'artist_image_link': show.artist.image_link,
+            'start_time': show.show_time.strftime('%Y-%m-%dT%H:%M:%S.000Z')
+        }
+        if show.show_time < time_now:
+            past_shows.append(_data)
+        else:
+            upcoming_shows.append(_data)
+    return (past_shows, upcoming_shows)
+
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -244,6 +295,28 @@ def show_venue(venue_id):
     }
     data = list(filter(lambda d: d['id'] ==
                        venue_id, [data1, data2, data3]))[0]
+
+    # retrieving live data from the database:
+    venue = Venue.query.get(venue_id)
+    past_shows, upcoming_shows = venue_list_shows(venue_id)
+    data = {
+        'id': venue.id,
+        'name': venue.name,
+        'genres': venue.genres.split(','),
+        'address': venue.address,
+        'city': venue.city,
+        'state': venue.state,
+        'phone': venue.phone,
+        'website': venue.website_link,
+        'facebook_link': venue.facebook_link,
+        'seeking_talent': venue.seeking_talent,
+        'seeking_description': venue.seeking_description,
+        'image_link': venue.image_link,
+        'past_shows': past_shows,
+        'upcoming_shows': upcoming_shows,
+        'past_show_count': len(past_shows),
+        'upcoming_show': len(upcoming_shows)
+    }
     return render_template('pages/show_venue.html', venue=data)
 
 #  Create Venue
@@ -312,6 +385,8 @@ def artists():
         "id": 6,
         "name": "The Wild Sax Band",
     }]
+
+    # extracting real data from the database
     data = Artist.query.all()
     return render_template('pages/artists.html', artists=data)
 
@@ -412,6 +487,7 @@ def show_artist(artist_id):
 
     # extracting data for the artist from the database:
     artist = Artist.query.get(artist_id)
+    past_shows, upcoming_shows = artist_list_shows(artist_id)
     data = {
         "id": artist.id,
         "name": artist.name,
@@ -424,11 +500,12 @@ def show_artist(artist_id):
         "seeking_venue": artist.seeking_venue,
         "seeking_description": artist.seeking_description,
         "image_link": artist.image_link,
-        "past_shows": [],
-        "upcoming_shows": [],
-        "past_shows_count": 1,
-        "upcoming_shows_count": 0,
+        "past_shows": past_shows,
+        "upcoming_shows": upcoming_shows,
+        "past_shows_count": len(past_shows),
+        "upcoming_shows_count": len(upcoming_shows),
     }
+    ipdb.set_trace()
     return render_template('pages/show_artist.html', artist=data)
 
 #  Update
