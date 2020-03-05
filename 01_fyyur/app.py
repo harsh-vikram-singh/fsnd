@@ -88,6 +88,17 @@ class Artist(db.Model):
     # check that past and upcoming shows can be extracted from shows table
     shows = db.relationship('Show', backref='artist', lazy=True)
 
+    def get_upcoming_shows(self):
+        """
+        returns a list of all the upcoming shows for an artist
+        """
+        upcoming_shows_list = []
+        shows = Show.query.filter(Show.artist_id == self.id).all()
+        for show in shows:
+            if show.show_time > datetime.datetime.now():
+                upcoming_shows_list.append(show)
+        return upcoming_shows_list
+
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
 # adding the table for shows that acts as the bridge table between Artist and Venue
 
@@ -204,7 +215,27 @@ def venues():
             "num_upcoming_shows": 0,
         }]
     }]
-    ipdb.set_trace()
+    # Implementing the todo: getting real data
+    data = []
+    venue_locations = db.session.query(
+        Venue.city, Venue.state).group_by(Venue.city, Venue.state).all()
+    for venue_loc in venue_locations:
+        venue_details = db.session.query(Venue).filter(Venue.city == venue_loc.city,
+                                                       Venue.state == venue_loc.state).all()
+        temp = {
+            "city": venue_loc.city,
+            "state": venue_loc.state,
+            "venues": [
+                {
+                    "id": venue.id,
+                    "name": venue.name,
+                    "num_upcoming_shows": len(venue.get_upcoming_shows())
+                }
+                for venue in venue_details
+            ]
+        }
+        data.append(temp)
+        # ipdb.set_trace()
     return render_template('pages/venues.html', areas=data)
 
 
@@ -221,6 +252,23 @@ def search_venues():
             "num_upcoming_shows": 0,
         }]
     }
+    # implementing venue search
+    response = {
+        "count": 0,
+        "data": []
+    }
+    search_data = request.form.to_dict()
+    venues = Venue.query.filter(Venue.name.ilike(
+        f"%{search_data['search_term']}%")).all()
+    for venue in venues:
+        response["data"].append(
+            {
+                "id": venue.id,
+                "name": venue.name,
+                "num_upcoming_shows": len(venue.get_upcoming_shows())
+            }
+        )
+    response["count"] = len(venues)
     return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
 
@@ -346,7 +394,7 @@ def create_venue_submission():
     # TODO: insert form data as a new Venue record in the db, instead
     # TODO: modify data to be the data object returned from db insertion
     form = VenueForm()
-    ipdb.set_trace()
+    # ipdb.set_trace()
     seeking_talent = False
     if form.seeking_talent.data == 'Yes':
         seeking_talent = True
@@ -416,6 +464,24 @@ def search_artists():
             "num_upcoming_shows": 0,
         }]
     }
+    # implementing the todo: search endpoint
+    response = {
+        "count": 0,
+        "data": []
+    }
+    search_data = request.form.to_dict()
+    artists = Artist.query.filter(Artist.name.ilike(
+        f"%{search_data['search_term']}%")).all()
+    for artist in artists:
+        response["data"].append(
+            {
+                "id": artist.id,
+                "name": artist.name,
+                "num_upcoming_shows": len(artist.get_upcoming_shows())
+            }
+        )
+    response["count"] = len(artists)
+    # ipdb.set_trace()
     return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
 
@@ -517,7 +583,7 @@ def show_artist(artist_id):
         "past_shows_count": len(past_shows),
         "upcoming_shows_count": len(upcoming_shows),
     }
-    ipdb.set_trace()
+    # ipdb.set_trace()
     return render_template('pages/show_artist.html', artist=data)
 
 #  Update
@@ -686,7 +752,7 @@ def create_show_submission():
         artist = Artist.query.get(form.artist_id.data)
         venue = Venue.query.get(form.venue_id.data)
         showtime = form.start_time.data
-        ipdb.set_trace()
+        # ipdb.set_trace()
         show = Show(artist_id=int(artist.id),
                     venue_id=int(venue.id),
                     show_time=showtime)
