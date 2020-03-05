@@ -353,8 +353,8 @@ def show_venue(venue_id):
         "past_shows_count": 1,
         "upcoming_shows_count": 1,
     }
-    data = list(filter(lambda d: d['id'] ==
-                       venue_id, [data1, data2, data3]))[0]
+    # data = list(filter(lambda d: d['id'] ==
+    #                    venue_id, [data1, data2, data3]))[0]
 
     # retrieving live data from the database:
     venue = Venue.query.get(venue_id)
@@ -418,6 +418,11 @@ def create_venue_submission():
     # TODO: on unsuccessful db insert, flash an error instead.
     # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
     # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
+    # implementing the todo: flash a message if artist could not be created
+    else:
+        # ipdb.set_trace()
+        flash(f'An error occurred. Venue {form.name.data} could not\
+              be listed. Error message from the server: {form.errors}')
     return render_template('pages/home.html')
 
 
@@ -560,8 +565,8 @@ def show_artist(artist_id):
         "past_shows_count": 0,
         "upcoming_shows_count": 3,
     }
-    data = list(filter(lambda d: d['id'] ==
-                       artist_id, [data1, data2, data3]))[0]
+    # data = list(filter(lambda d: d['id'] ==
+    #                    artist_id, [data1, data2, data3]))[0]
 
     # extracting data for the artist from the database:
     artist = Artist.query.get(artist_id)
@@ -680,12 +685,17 @@ def create_artist_submission():
                         image_link=form.image_link.data)
         db.session.add(artist)
         db.session.commit()
-    print("check if the data is inserted into the Artist table")
+    # print("check if the data is inserted into the Artist table")
     # ipdb.set_trace()
     # on successful db insert, flash success
-    flash('Artist ' + request.form['name'] + ' was successfully listed!')
+        flash('Artist ' + request.form['name'] + ' was successfully listed!')
     # TODO: on unsuccessful db insert, flash an error instead.
     # e.g., flash('An error occurred. Artist ' + data.name + ' could not be listed.')
+    # implementing the todo: flash a message if artist could not be created
+    else:
+        # ipdb.set_trace()
+        flash(f'An error occurred. Artist {form.name.data} could not\
+              be listed. Error message from the server: {form.errors}')
     return render_template('pages/home.html')
 
 

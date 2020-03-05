@@ -2,7 +2,8 @@ from datetime import datetime
 from flask_wtf import Form
 from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField
 from wtforms.validators import DataRequired, AnyOf, URL, ValidationError
-from enum import Enum
+# from enum import Enum
+import re
 
 ###############################################################
 # enum classes for custom validators
@@ -102,6 +103,14 @@ def validate_states(form, field):
         if state not in valid_states:
             raise ValidationError(
                 f'{state} is not valid. Please select a value that from the provided list')
+
+
+def validate_phone_no(form, field):
+    regex = "[0-9]{3}-[0-9]{3}-[0-9]{4}"
+    match = re.search(regex, field.data)
+    if match is None:
+        raise ValidationError('Phone number is not in valid format')
+
 #########################################################################
 
 
@@ -137,7 +146,7 @@ class VenueForm(Form):
         'address', validators=[DataRequired()]
     )
     phone = StringField(
-        'phone'
+        'phone', validators=[DataRequired(), validate_phone_no]
     )
     image_link = StringField(
         'image_link'
@@ -181,7 +190,7 @@ class ArtistForm(Form):
     )
     phone = StringField(
         # TODO implement validation logic for state
-        'phone'
+        'phone', validators=[DataRequired(), validate_phone_no]
     )
     image_link = StringField(
         'image_link'
