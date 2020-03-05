@@ -733,6 +733,21 @@ def shows():
         "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
         "start_time": "2035-04-15T20:00:00.000Z"
     }]
+
+    # implementing the todo: extract live data from the database
+    shows = Show.query.all()
+    data = []
+    for show in shows:
+        temp = {
+            "venue_id": show.venue_id,
+            "artist_id": show.artist_id,
+            "venue_name": show.venue.name,
+            "artist_name": show.artist.name,
+            "artist_image_link": show.artist.image_link,
+            "start_time": show.show_time.strftime('%Y-%m-%dT%H:%M:%S.000Z')
+        }
+        data.append(temp)
+        # ipdb.set_trace()
     return render_template('pages/shows.html', shows=data)
 
 
