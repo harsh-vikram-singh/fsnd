@@ -56,6 +56,17 @@ class Venue(db.Model):
     # check that past and upcoming shows can be extracted from shows table
     shows = db.relationship('Show', backref='venue', lazy=True)
 
+    def get_upcoming_shows(self):
+        """
+        returns a list of all the upcoming shows for a venue
+        """
+        upcoming_shows_list = []
+        shows = Show.query.filter(Show.venue_id == self.id).all()
+        for show in shows:
+            if show.show_time > datetime.datetime.now():
+                upcoming_shows_list.append(show)
+        return upcoming_shows_list
+
 
 class Artist(db.Model):
     __tablename__ = 'Artist'
@@ -193,6 +204,7 @@ def venues():
             "num_upcoming_shows": 0,
         }]
     }]
+    ipdb.set_trace()
     return render_template('pages/venues.html', areas=data)
 
 
