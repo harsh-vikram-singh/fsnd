@@ -184,6 +184,7 @@ app.jinja_env.filters['datetime'] = format_datetime
 
 @app.route('/')
 def index():
+    ipdb.set_trace()
     return render_template('pages/home.html')
 
 
