@@ -123,7 +123,7 @@ def create_app(test_config=None):
         question_text = data.get('question')
         answer = data.get('answer')
         difficulty = data.get('difficulty')
-        category = data.get('categoty')
+        category = data.get('category')
 
         print(question_text)
 
@@ -183,6 +183,16 @@ def create_app(test_config=None):
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
+    @app.route('/categories/<int:category_id>/questions')
+    def category_questions(category_id):
+        questions = Question.query.filter(
+            Question.category == category_id).all()
+        formatted_questions = [question.format() for question in questions]
+        return jsonify({
+            'success': True,
+            'questions': formatted_questions,
+            'total_questions': len(questions)
+        })
 
     '''
   @TODO: 
