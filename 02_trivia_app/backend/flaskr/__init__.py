@@ -205,6 +205,31 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not. 
   '''
+    @app.route('/quizzes', methods=['POST'])
+    def play_quiz():
+        print('endpoint: quizzes')
+        data = request.get_json()
+        print(data)
+        previous_question = data.get('previous_questions')
+        quiz_category = data.get('quiz_category')
+
+        # selecting the category for the questions to select from
+        all_categories = [c.id for c in Category.query.all()]
+        category = quiz_category.get('type')
+        if category == 'click':
+            category = all_categories
+        else:
+            category = [category]
+
+        # selecting question from the table based on the choice made by the user
+        # if len(category) == 1:
+        # ipdb.set_trace()
+        questions = Question.query.filter(
+            Question.category.in_(category)).all()
+
+        return jsonify({
+            'success': True
+        })
 
     '''
   @TODO: 
