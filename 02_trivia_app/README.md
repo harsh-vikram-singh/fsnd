@@ -117,7 +117,7 @@ Errors are returned as JSON objects in the following format:
 
 ```json
 {
-    "success": False,
+    "success": false,
     "error": 400,
     "message": "Bad Request"
 }
@@ -134,7 +134,39 @@ The API will return the following three error types when requests fail:
 #### GET /categories
 * General
     * Returns a list of all the categories of the questions in the database
-* Sample request:  `<curl -X localhost:5000/categories>`
+* Sample request:  `curl localhost:5000/categories`
+
+```json
+{
+  "categories": [
+    {
+      "id": 1, 
+      "type": "Science"
+    }, 
+    {
+      "id": 2, 
+      "type": "Art"
+    }, 
+    {
+      "id": 3, 
+      "type": "Geography"
+    }, 
+    {
+      "id": 4, 
+      "type": "History"
+    }, 
+    {
+      "id": 5, 
+      "type": "Entertainment"
+    }, 
+    {
+      "id": 6, 
+      "type": "Sports"
+    }
+  ], 
+  "success": true
+}
+```
 
 #### GET /questions
 
