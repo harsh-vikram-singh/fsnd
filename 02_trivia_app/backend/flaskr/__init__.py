@@ -137,23 +137,23 @@ def create_app(test_config=None):
   '''
     @app.route('/questions', methods=['POST'])
     def add_question():
-        print('endpoint hit: add_question, method: POST')
+        # print('endpoint hit: add_question, method: POST')
         try:
             data = request.get_json()
         except:
             abort(400)
-
+        # ipdb.set_trace()
         question_text = data.get('question')
-        if question_text is None:
+        if question_text == "":
             abort(400)
         answer = data.get('answer')
-        if answer is None:
+        if answer == "":
             abort(400)
         difficulty = data.get('difficulty')
-        if difficulty is None:
+        if difficulty == "":
             abort(400)
         category = data.get('category')
-        if category is None:
+        if category == "":
             abort(400)
 
         # print(question_text)
@@ -169,12 +169,10 @@ def create_app(test_config=None):
         except:
             abort(422)
 
-        try:
-            questions = Question.query.paginate(page=1, per_page=10)
-            if questions.total == 0:
-                abort(404)
-        except:
-            abort(500)
+        questions = Question.query.paginate(page=1, per_page=10)
+        if questions.total == 0:
+            abort(404)
+
         questions_list = questions.items
         formatted_questions = [question.format()
                                for question in questions_list]
@@ -201,15 +199,10 @@ def create_app(test_config=None):
   '''
     @app.route('/questions/search', methods=['POST'])
     def search_question():
-        try:
-            data = request.get_json()
-        except:
-            abort(400)
+        data = request.get_json()
         # ipdb.set_trace()
-        try:
-            search_term = data.get('searchTerm')
-        except:
-            abort(400)
+        search_term = data.get('searchTerm')
+
         questions = Question.query.filter(
             Question.question.ilike(f'%{search_term}%')).all()
         formatted_questions = [question.format() for question in questions]
@@ -315,14 +308,6 @@ def create_app(test_config=None):
             'error': 404,
             'message': 'Not Found'
         }), 404
-
-    @app.errorhandler(500)
-    def server_error(error):
-        return jsonify({
-            'success': False,
-            'error': 500,
-            'message': 'Server Error'
-        }), 500
 
     @app.errorhandler(400)
     def bad_request(error):

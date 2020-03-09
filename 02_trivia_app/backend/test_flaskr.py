@@ -37,6 +37,13 @@ class TriviaTestCase(unittest.TestCase):
             'difficulty': 5
         }
 
+        self.wrong_question = {
+            "question": "",
+            "answer": "Tony Stark",
+            "category": "",
+            "difficulty": ""
+        }
+
         self.search_term = {
             'searchTerm': 'autobiography'
         }
@@ -83,6 +90,15 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['total_questions'])
         self.assertTrue(data['categories'])
 
+    def test_422_get_questions(self):
+        res = self.client().get('/questions?page=1000')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(
+            data['message'], 'Can not be processed. Please check your request again')
+
     ######################################
     # tests for endpoint: add_question
     ######################################
@@ -96,6 +112,14 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['total_questions'])
         self.assertTrue(data['categories'])
 
+    def test_400_add_question(self):
+        res = self.client().post('/questions', json=self.wrong_question)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Bad Request')
+
     ######################################
     # tests for endpoint: delete_questions
     ######################################
@@ -108,6 +132,14 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['questions'])
         self.assertTrue(data['total_questions'])
         self.assertTrue(data['categories'])
+
+    def test_404_delete_question(self):
+        res = self.client().delete('/questions/1000')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Not Found')
     ######################################
     # tests for endpoint: search_question
     ######################################
