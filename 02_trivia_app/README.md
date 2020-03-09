@@ -63,11 +63,11 @@ $ flask run
 
 #### Installing dependencies
 
-**Installing Node and npm**
+##### Installing Node and npm
 
 Node and node package manager(npm) are required to run the frontend. These can be installed from [here](https://nodejs.com/en/download)
 
-**Installing project dependencies**
+##### Installing project dependencies
 
 Navigate to the project website and run the following command:
 
@@ -75,7 +75,7 @@ Navigate to the project website and run the following command:
 $ npm install
 ```
 
-**Running the frontend in development mode**
+##### Running the frontend in development mode
 
 Run the following command:
 
