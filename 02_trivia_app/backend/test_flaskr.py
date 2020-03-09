@@ -6,11 +6,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flaskr import create_app
 from models import setup_db, Question, Category
 import ipdb
-print('message at the top after imports')
 
 
 class TriviaTestCase(unittest.TestCase):
     """This class represents the trivia test case"""
+    # ipdb.set_trace()
 
     def setUp(self):
         # ipdb.set_trace()
@@ -30,6 +30,13 @@ class TriviaTestCase(unittest.TestCase):
             # create all tables
             self.db.create_all()
 
+        self.new_question = {
+            'question': 'Who is Iron Man',
+            'answer': 'Tony Stark',
+            'category': 5,
+            'difficulty': 5
+        }
+
     def tearDown(self):
         """Executed after reach test"""
         pass
@@ -43,25 +50,52 @@ class TriviaTestCase(unittest.TestCase):
     ######################################
 
     def test_get_all_categories(self):
-        ipdb.set_trace()
+        # ipdb.set_trace()
         res = self.client().get('/categories')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
+        self.assertTrue(data['categories'])
 
     ######################################
     # tests for endpoint: get_questions
     ######################################
+    def test_get_questions(self):
+        res = self.client().get('/questions')
+        data = json.loads(res.data)
 
-    ######################################
-    # tests for endpoint: delete_questions
-    ######################################
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['questions'])
+        self.assertTrue(data['total_questions'])
+        self.assertTrue(data['categories'])
 
     ######################################
     # tests for endpoint: add_question
     ######################################
+    def test_add_question(self):
+        res = self.client().post('/questions', json=self.new_question)
+        data = json.loads(res.data)
 
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['questions'])
+        self.assertTrue(data['total_questions'])
+        self.assertTrue(data['categories'])
+
+    ######################################
+    # tests for endpoint: delete_questions
+    ######################################
+    def test_delete_questions(self):
+        res = self.client().delete('/questions/27')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['questions'])
+        self.assertTrue(data['total_questions'])
+        self.assertTrue(data['categories'])
     ######################################
     # tests for endpoint: search_question
     ######################################

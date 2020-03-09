@@ -103,7 +103,7 @@ def create_app(test_config=None):
             except:
                 abort(422)
             questions_list = questions.items
-            ipdb.set_trace()
+            # ipdb.set_trace()
             formatted_questions = [question.format()
                                    for question in questions_list]
             try:
@@ -162,6 +162,8 @@ def create_app(test_config=None):
                             answer=answer,
                             category=category,
                             difficulty=difficulty)
+
+        # ipdb.set_trace()
         try:
             question.insert()
         except:
