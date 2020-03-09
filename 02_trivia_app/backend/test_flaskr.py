@@ -14,7 +14,7 @@ class TriviaTestCase(unittest.TestCase):
 
     def setUp(self):
         # ipdb.set_trace()
-        print('inside func: setup')
+        # print('inside func: setup')
         """Define test variables and initialize app."""
         self.app = create_app()
         self.client = self.app.test_client
@@ -35,6 +35,18 @@ class TriviaTestCase(unittest.TestCase):
             'answer': 'Tony Stark',
             'category': 5,
             'difficulty': 5
+        }
+
+        self.search_term = {
+            'searchTerm': 'autobiography'
+        }
+
+        self.play_quiz = {
+            'previous_questions': [],
+            'quiz_category': {
+                'type': 1,
+                'id': 0
+            }
         }
 
     def tearDown(self):
@@ -88,7 +100,7 @@ class TriviaTestCase(unittest.TestCase):
     # tests for endpoint: delete_questions
     ######################################
     def test_delete_questions(self):
-        res = self.client().delete('/questions/27')
+        res = self.client().delete('/questions/9')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -100,13 +112,37 @@ class TriviaTestCase(unittest.TestCase):
     # tests for endpoint: search_question
     ######################################
 
+    def test_search_question(self):
+        res = self.client().post('/questions/search', json=self.search_term)
+        data = json.loads(res.data)
+        # ipdb.set_trace()
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['questions'])
+        self.assertTrue(data['total_questions'])
+
     ######################################
     # tests for endpoint: category_questions
     ######################################
+    def test_category_questions(self):
+        res = self.client().get('/categories/6/questions')
+        data = json.loads(res.data)
+        # ipdb.set_trace()
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['questions'])
+        self.assertTrue(data['total_questions'])
 
     ######################################
     # tests for endpoint: play_quiz
     ######################################
+    def test_play_quiz(self):
+        res = self.client().post('/quizzes', json=self.play_quiz)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['question'])
 
 
 # Make the tests conveniently executable

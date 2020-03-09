@@ -205,6 +205,7 @@ def create_app(test_config=None):
             data = request.get_json()
         except:
             abort(400)
+        # ipdb.set_trace()
         try:
             search_term = data.get('searchTerm')
         except:
