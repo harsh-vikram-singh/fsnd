@@ -132,9 +132,14 @@ The API will return the following three error types when requests fail:
 ### Endpoints
 
 #### GET /categories
+
 * General
+
     * Returns a list of all the categories of the questions in the database
+
 * Sample request:  `curl localhost:5000/categories`
+
+* Sample response:
 
 ```json
 {
@@ -170,12 +175,429 @@ The API will return the following three error types when requests fail:
 
 #### GET /questions
 
+* General
+    * Returns total_questions, success status and lists of categories and questions
+    * The results are paginated with 10 questions per page
+
+* Sample requests:
+    `curl localhost:5000/questions` for the first page, or `curl localhost:5000/questions?page=2`
+
+* Sample response:
+
+```json
+{
+  "categories": [
+    {
+      "id": 1, 
+      "type": "Science"
+    }, 
+    {
+      "id": 2, 
+      "type": "Art"
+    }, 
+    {
+      "id": 3, 
+      "type": "Geography"
+    }, 
+    {
+      "id": 4, 
+      "type": "History"
+    }, 
+    {
+      "id": 5, 
+      "type": "Entertainment"
+    }, 
+    {
+      "id": 6, 
+      "type": "Sports"
+    }
+  ], 
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "Maya Angelou", 
+      "category": 4, 
+      "difficulty": 2, 
+      "id": 5, 
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    }, 
+    {
+      "answer": "Tom Cruise", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 4, 
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    }, 
+    {
+      "answer": "Edward Scissorhands", 
+      "category": 5, 
+      "difficulty": 3, 
+      "id": 6, 
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }, 
+    {
+      "answer": "Brazil", 
+      "category": 6, 
+      "difficulty": 3, 
+      "id": 10, 
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }, 
+    {
+      "answer": "Uruguay", 
+      "category": 6, 
+      "difficulty": 4, 
+      "id": 11, 
+      "question": "Which country won the first ever soccer World Cup in 1930?"
+    }, 
+    {
+      "answer": "George Washington Carver", 
+      "category": 4, 
+      "difficulty": 2, 
+      "id": 12, 
+      "question": "Who invented Peanut Butter?"
+    }, 
+    {
+      "answer": "Lake Victoria", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 13, 
+      "question": "What is the largest lake in Africa?"
+    }, 
+    {
+      "answer": "The Palace of Versailles", 
+      "category": 3, 
+      "difficulty": 3, 
+      "id": 14, 
+      "question": "In which royal palace would you find the Hall of Mirrors?"
+    }, 
+    {
+      "answer": "Agra", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 15, 
+      "question": "The Taj Mahal is located in which Indian city?"
+    }, 
+    {
+      "answer": "Escher", 
+      "category": 2, 
+      "difficulty": 1, 
+      "id": 16, 
+      "question": "Which Dutch graphic artist's initials M C was a creator of optical illusions?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 21
+}
+```
+
 #### POST /questions
+
+* General
+    * Add a new question in the database
+    * Required fields: question, answer, category and difficulty. All are required to successfully add a question to the database.
+    * Once the question is added, the server returns total_questions, success status and lists of categories and questions
+    * The list of questions is paginated, with maximum 10 questions per page
+
+* Sample request:
+`curl -X POST -H "Content-Type: application/json" -d '{"question": "Who is the author of: A Game of Thrones", "answer": "G. R. R. Martin", "category": 4, "difficulty": 2}' localhost:5000/questions`
+
+* Sample response:
+```json
+{
+  "categories": [
+    {
+      "id": 1, 
+      "type": "Science"
+    }, 
+    {
+      "id": 2, 
+      "type": "Art"
+    }, 
+    {
+      "id": 3, 
+      "type": "Geography"
+    }, 
+    {
+      "id": 4, 
+      "type": "History"
+    }, 
+    {
+      "id": 5, 
+      "type": "Entertainment"
+    }, 
+    {
+      "id": 6, 
+      "type": "Sports"
+    }
+  ], 
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "Maya Angelou", 
+      "category": 4, 
+      "difficulty": 2, 
+      "id": 5, 
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    }, 
+    {
+      "answer": "Tom Cruise", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 4, 
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    }, 
+    {
+      "answer": "Edward Scissorhands", 
+      "category": 5, 
+      "difficulty": 3, 
+      "id": 6, 
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }, 
+    {
+      "answer": "Brazil", 
+      "category": 6, 
+      "difficulty": 3, 
+      "id": 10, 
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }, 
+    {
+      "answer": "Uruguay", 
+      "category": 6, 
+      "difficulty": 4, 
+      "id": 11, 
+      "question": "Which country won the first ever soccer World Cup in 1930?"
+    }, 
+    {
+      "answer": "George Washington Carver", 
+      "category": 4, 
+      "difficulty": 2, 
+      "id": 12, 
+      "question": "Who invented Peanut Butter?"
+    }, 
+    {
+      "answer": "Lake Victoria", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 13, 
+      "question": "What is the largest lake in Africa?"
+    }, 
+    {
+      "answer": "The Palace of Versailles", 
+      "category": 3, 
+      "difficulty": 3, 
+      "id": 14, 
+      "question": "In which royal palace would you find the Hall of Mirrors?"
+    }, 
+    {
+      "answer": "Agra", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 15, 
+      "question": "The Taj Mahal is located in which Indian city?"
+    }, 
+    {
+      "answer": "Escher", 
+      "category": 2, 
+      "difficulty": 1, 
+      "id": 16, 
+      "question": "Which Dutch graphic artist's initials M C was a creator of optical illusions?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 22
+}
+```
 
 #### DELETE /questions/{question_id}
 
+* General
+    * Deletes a question using the question id.
+    * Once the question is deleted, the server returns total_questions, success status and lists of categories and questions.
+    * The list of questions is paginated, with maximum 10 questions per page.
+
+* Sample request: `curl -X DELETE localhost:5000/questions/5`
+
+* Sample response:
+```json
+{
+  "categories": [
+    {
+      "id": 1, 
+      "type": "Science"
+    }, 
+    {
+      "id": 2, 
+      "type": "Art"
+    }, 
+    {
+      "id": 3, 
+      "type": "Geography"
+    }, 
+    {
+      "id": 4, 
+      "type": "History"
+    }, 
+    {
+      "id": 5, 
+      "type": "Entertainment"
+    }, 
+    {
+      "id": 6, 
+      "type": "Sports"
+    }
+  ], 
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "Tom Cruise", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 4, 
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    }, 
+    {
+      "answer": "Edward Scissorhands", 
+      "category": 5, 
+      "difficulty": 3, 
+      "id": 6, 
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }, 
+    {
+      "answer": "Brazil", 
+      "category": 6, 
+      "difficulty": 3, 
+      "id": 10, 
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }, 
+    {
+      "answer": "Uruguay", 
+      "category": 6, 
+      "difficulty": 4, 
+      "id": 11, 
+      "question": "Which country won the first ever soccer World Cup in 1930?"
+    }, 
+    {
+      "answer": "George Washington Carver", 
+      "category": 4, 
+      "difficulty": 2, 
+      "id": 12, 
+      "question": "Who invented Peanut Butter?"
+    }, 
+    {
+      "answer": "Lake Victoria", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 13, 
+      "question": "What is the largest lake in Africa?"
+    }, 
+    {
+      "answer": "The Palace of Versailles", 
+      "category": 3, 
+      "difficulty": 3, 
+      "id": 14, 
+      "question": "In which royal palace would you find the Hall of Mirrors?"
+    }, 
+    {
+      "answer": "Agra", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 15, 
+      "question": "The Taj Mahal is located in which Indian city?"
+    }, 
+    {
+      "answer": "Escher", 
+      "category": 2, 
+      "difficulty": 1, 
+      "id": 16, 
+      "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?"
+    }, 
+    {
+      "answer": "Mona Lisa", 
+      "category": 2, 
+      "difficulty": 3, 
+      "id": 17, 
+      "question": "La Giaconda is better known as what?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 21
+}
+```
+
 #### POST /questions/search
+
+* General
+    * Search questions based on a search term.
+    * The endpoint returns all the questions for whom the search term is a substring of the question (search is case-insensitive)
+    * The questions list will update to include only question that include that string within their question.
+    * the server returns total_questions that match the search criteria, success status and lists of categories and questions that match the search criteria.
+
+* Sample request:
+`curl -X POST -H "Content-Type: application/json" -d '{"searchTerm": "thrones"}' localhost:5000/questions/search`
+
+* Sample response:
+```json
+{
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "G. R. R. Martin", 
+      "category": 4, 
+      "difficulty": 2, 
+      "id": 63, 
+      "question": "Who is the author of: A Game of Thrones"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 1
+}
+```
 
 #### GET /categories/{category_id}/questions
 
+* General
+    * Returns all the questions for a particular category
+    * Server response includes success status, number of total questions for the category that was searched and a list of questions that belong to that category
+
+* Sample request: `curl localhost:5000/categories/{category_id}/questions` where {category_id} should be replaced by the id of the category being searched. For example: `curl localhost:5000/categories/3/questions`
+
+* Sample response:
+```json
+{
+  "questions": [
+    {
+      "answer": "Lake Victoria", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 13, 
+      "question": "What is the largest lake in Africa?"
+    }, 
+    {
+      "answer": "The Palace of Versailles", 
+      "category": 3, 
+      "difficulty": 3, 
+      "id": 14, 
+      "question": "In which royal palace would you find the Hall of Mirrors?"
+    }, 
+    {
+      "answer": "Agra", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 15, 
+      "question": "The Taj Mahal is located in which Indian city?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 3
+}
+```
+
 #### POST /quizzes
+
+* General
+    * Returns questions to play the quiz.
+    * Takes category and previous_question parameter.
+    * Returns a random question within the given category.
+    * Ensures that the question being returned is not in the previous_question parameter
+
+* Sample request:
