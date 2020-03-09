@@ -1,5 +1,4 @@
 # Project 2: Trivia App
----
 
 This project is part of Udacity's Full Stack Nanodegree Program, wherein users can play a trivia game. Users can also
 add new question, view all the question and select questions based on category. The learning objective is to understand
@@ -8,7 +7,6 @@ how API Development and Documentation.
 All backend code follow PEP8 style guidelines.
 
 ## Getting Started
----
 
 The project has decoupled frontend and backend. The frontend is written in React.js whereas the backend is written using Flask, a python webframework.
 
