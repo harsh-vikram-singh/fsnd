@@ -509,7 +509,7 @@ The API will return the following three error types when requests fail:
       "category": 2, 
       "difficulty": 1, 
       "id": 16, 
-      "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?"
+      "question": "Which Dutch graphic artist's initials M C was a creator of optical illusions?"
     }, 
     {
       "answer": "Mona Lisa", 
@@ -601,3 +601,33 @@ The API will return the following three error types when requests fail:
     * Ensures that the question being returned is not in the previous_question parameter
 
 * Sample request:
+`curl -X POST -H "Content-Type: application/json" -d '{"previous_questions": [6], "quiz_category": {"type": 3, "id": 2}}' localhost:5000/quizzes`
+
+* Sample response:
+```json
+{
+  "question": {
+    "answer": "The Palace of Versailles", 
+    "category": 3, 
+    "difficulty": 3, 
+    "id": 14, 
+    "question": "In which royal palace would you find the Hall of Mirrors?"
+  }, 
+  "success": true
+}
+```
+---
+
+## Deployment
+
+Not applicable
+
+## Author
+
+Harsh Vikram Singh
+
+## Acknowledgements
+
+Instructions to install various dependencies were taken from Udacity's readme file for the backend as well as frontend.
+
+The Structure of this README was inspired from the Coach Caryn's video on API Documentation.
