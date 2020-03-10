@@ -100,6 +100,9 @@ $ psql trivia_test < trivia.psql
 $ python test_flaskr
 ```
 
+**Note**: In case running `python test_flaskr` results in a message like: `Ran 0 tests in 0.000s`, run the tests with following command:
+`python -m  unittest discover -s .`
+
 If running the tests for the first time, omit the 'dropdb trivia_test' command. These commands reset the database and populate the tables with some dummy data, on which the defined endpoints can be tested. Also, ensure that these commands are run in the proper virtual environment.
 
 ---
