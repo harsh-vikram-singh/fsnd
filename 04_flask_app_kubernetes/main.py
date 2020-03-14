@@ -1,19 +1,23 @@
-#!/home/singh/anaconda3/envs/fs/bin/python
+r"""
+# !/home/singh/anaconda3/envs/fs/bin/python
+"""
 """
 A simple app to create a JWT token.
 """
+
+# pylint: disable=import-error
+
+
 import os
 import logging
 import datetime
 import functools
 import jwt
-
-# pylint: disable=import-error
 from flask import Flask, jsonify, request, abort
-
-
 JWT_SECRET = os.environ.get('JWT_SECRET', 'abc123abc1234')
 LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
+
+print('debug msg: 1')
 
 
 def _logger():
@@ -35,9 +39,12 @@ def _logger():
     return log
 
 
+print('debug msg: 2')
 LOG = _logger()
 LOG.debug("Starting with log level: %s" % LOG_LEVEL)
 APP = Flask(__name__)
+
+print('debug msg: 3')
 
 
 def require_jwt(function):
